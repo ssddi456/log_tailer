@@ -6,7 +6,13 @@ var child_process = require('child_process');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  storage.get_views(function( err, views ) {
+    if( err ){
+      next(err);
+    } else {
+      res.render('index', { title: 'Express', views: views });
+    }
+  })
 });
 
 
@@ -68,6 +74,7 @@ router.get('/start_log_tail', function( req, resp, next ) {
     
 });
 
+
 router.get('/update_log', function( req, resp, next ) {
   var query = req.query;
   var pathname = query.pathname;
@@ -82,6 +89,33 @@ router.get('/update_log', function( req, resp, next ) {
   console.log('text', text.length);
 
   resp.end(text);
+});
+
+router.post('/remove_view', function( req, resp, next ) {
+  
+  var body = req.body;
+  var _id = body._id;
+
+  storage.remove_view(_id, function( err ) {
+    if(err){
+      next(err);
+    } else {
+      resp.json({ err : 0 });
+    }
+  });
+});
+
+router.post('/add_view', function( req, resp, next ) {
+  storage.add_view(function( err, doc ) {
+    if( err ){
+      next(err);
+    } else {
+      resp.json({
+        view : doc,
+        err  : 0
+      });
+    }
+  });
 });
 
 router.post('/update_view', function( req, resp, next ) {

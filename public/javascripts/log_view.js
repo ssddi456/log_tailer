@@ -5,7 +5,7 @@ define([
 ){
   function log_view() {
     var vm = {
-      name : 'undefined',
+      name : ko.observable('undefined'),
       pathname : ko.observable('D:\\OneDrive\\shortcuts\\sl\\logs'),
       watching : ko.observable(false),
       log  : ko.observable(''),
@@ -48,6 +48,24 @@ define([
       }
     };
 
+    vm.name.subscribe(function( name ) {
+      $.post('/update_view', {
+        name : name,
+        _id : vm._id
+      }, function( res ) {
+          
+      });
+    });
+
+    vm.pathname.subscribe(function( pathname ) {
+      $.post('/update_view', {
+        pathname : pathname,
+        _id : vm._id
+      }, function( res ) {
+          
+      }); 
+    });
+
     vm.watching.subscribe(function( bool ) {
       if( !bool ){
         if( vm.timer ){
@@ -69,6 +87,14 @@ define([
       }
     });
     return vm;
+  }
+
+  log_view.create = function( doc ) {
+    var view = log_view();
+    view._id = doc._id;
+    view.name(doc.name);
+    view.pathname(doc.pathname);
+    return view;
   }
 
   return log_view;
