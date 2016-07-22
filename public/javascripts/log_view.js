@@ -50,7 +50,7 @@ define([
 
     vm.name.subscribe(function( name ) {
       $.post('/update_view', {
-        name : name,
+        data : { name : name },
         _id : vm._id
       }, function( res ) {
           
@@ -59,7 +59,7 @@ define([
 
     vm.pathname.subscribe(function( pathname ) {
       $.post('/update_view', {
-        pathname : pathname,
+        data: { pathname : pathname },
         _id : vm._id
       }, function( res ) {
           
@@ -71,6 +71,7 @@ define([
         if( vm.timer ){
           clearTimeout(vm.timer);
         }
+        vm.timer = undefined;
       } else {
         if( vm.timer ){
           // pass

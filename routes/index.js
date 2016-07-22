@@ -120,8 +120,8 @@ router.post('/add_view', function( req, resp, next ) {
 
 router.post('/update_view', function( req, resp, next ) {
   var body = req.body;
-
-  resp.update(body._id, body.data, function( err, res ) {
+  
+  storage.update(body._id, body.data, function( err, res ) {
     if( err ){
       next(err);
       return;
@@ -133,7 +133,7 @@ router.post('/update_view', function( req, resp, next ) {
 
 router.post('/update_layout', function( req, resp, next) {
   var body = req.body;
-  resp.update_layout( body, function(err, res ) {
+  storage.update_layout( body, function(err, res ) {
     if( err ) {
       next(err);
       return;
