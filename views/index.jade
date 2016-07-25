@@ -21,11 +21,15 @@ block content
       line-height: 5px;
       top:-2px;
     }
+    .highlight{
+      color:red;
+      background-color: yellow;
+    }
   .navbar
     .container-fluid
       // Brand and toggle get grouped for better mobile display
       .navbar-header
-        a.navbar-brand(href='/') Brand
+        a.navbar-brand(href='#') log tailer
       .collapse.navbar-collapse
         .btn-group
           a.btn.btn-default.navbar-btn(data-bind="click:add_view")
@@ -47,8 +51,29 @@ block content
                                                   'glyphicon-play' : !watching(),\
                                                   'glyphicon-stop' : watching(),\
                                               }")
+
+              span.btn.btn-default(data-bind="click: clean")
+                i.glyphicon.glyphicon-trash
+
               span.btn.btn-default(data-bind="click: $parent.remove_view")
                 i.glyphicon.glyphicon-remove
+      p
+      .row
+        .col-xs-12
+          h4.pull-left
+            | keywords : 
+            +ko("foreach : keywords")
+              span.label.label-primary
+                +ko("text:$data")
+                i.glyphicon.glyphicon-remove(data-bind="click: $parent.remove_keywork")
+              |  
+          .col-xs-4
+            .input-group
+              input.form-control(data-bind="value:keyword_to_add")
+              .input-group-btn
+                span.btn.btn-default(data-bind="click:add_keyword")
+                  .glyphicon.glyphicon-plus
+
       p
       .row
         .col-xs-12

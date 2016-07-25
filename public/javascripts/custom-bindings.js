@@ -31,7 +31,7 @@ define([
 
           var clientHeight = el_logs.clientHeight;
           if( clientHeight == el_logs.scrollHeight 
-            || clientHeight > min_draggable_height
+            && clientHeight <= min_draggable_height
           ){
             return;
           }
