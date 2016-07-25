@@ -25,6 +25,17 @@ block content
       color:red;
       background-color: yellow;
     }
+    .keywords-row{
+    
+    }
+    .keywords-row h4{
+      margin:0;
+    }
+    .keywords-row .form-control{
+      height:22px;
+      padding-top:0;
+      padding-bottom:0;
+    }
   .navbar
     .container-fluid
       // Brand and toggle get grouped for better mobile display
@@ -58,20 +69,21 @@ block content
               span.btn.btn-default(data-bind="click: $parent.remove_view")
                 i.glyphicon.glyphicon-remove
       p
-      .row
+      .row.keywords-row
         .col-xs-12
           h4.pull-left
-            | keywords : 
+            | highlights : 
             +ko("foreach : keywords")
-              span.label.label-primary
+              span.btn.btn-primary.btn-xs
                 +ko("text:$data")
+                | 
                 i.glyphicon.glyphicon-remove(data-bind="click: $parent.remove_keywork")
               |  
-          .col-xs-4
+          .col-xs-3
             .input-group
               input.form-control(data-bind="value:keyword_to_add")
               .input-group-btn
-                span.btn.btn-default(data-bind="click:add_keyword")
+                span.btn.btn-default.btn-xs(data-bind="click:add_keyword")
                   .glyphicon.glyphicon-plus
 
       p

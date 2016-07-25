@@ -86,8 +86,6 @@ router.get('/update_log', function( req, resp, next ) {
   cache.lastvisit = Date.now();
 
   text = Buffer.concat(text);
-  console.log('text', text.length);
-
   resp.end(text);
 });
 
