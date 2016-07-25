@@ -1,7 +1,26 @@
 extends layout.jade
 
 block content
-
+  style.
+    .log_container pre{
+      max-height: 400px;
+    }
+    .log_container .drag-handle{
+      height: 12px;
+      margin-top:-2px;
+      margin-bottom:-2px;
+      text-align: center;
+      cursor: ns-resize;
+      color:#ddd;
+    }
+    .log_container .drag-handle:hover{
+      background-color: #ddd;
+      color:#fff;
+    }
+    .log_container .drag-handle .glyphicon{
+      line-height: 5px;
+      top:-2px;
+    }
   .navbar
     .container-fluid
       // Brand and toggle get grouped for better mobile display
@@ -33,8 +52,12 @@ block content
       p
       .row
         .col-xs-12
-          pre(data-bind="log : log")
-
+          .log_container(data-bind="log : log")
+            pre
+            .drag-handle
+              i.glyphicon.glyphicon-minus
+              i.glyphicon.glyphicon-minus
+              i.glyphicon.glyphicon-minus
       hr
 
 append js
