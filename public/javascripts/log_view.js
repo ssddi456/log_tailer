@@ -8,6 +8,7 @@ define([
       name : ko.observable('undefined'),
       pathname : ko.observable('D:\\OneDrive\\shortcuts\\sl\\logs'),
       watching : ko.observable(false),
+      editing  : ko.observable(false),
       log  : ko.observable(''),
       max_buffer : ko.observable(1000),
       timer : undefined,
