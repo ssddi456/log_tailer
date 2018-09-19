@@ -48,3 +48,6 @@ Temporary Items
 
 
 *.db
+
+node_modules
+output
