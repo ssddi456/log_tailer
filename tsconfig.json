@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "watch": true,
+        "watch": false,
         "allowJs": true,
         "target": "es5",
         "lib": [
@@ -8,9 +8,10 @@
             "es2015",
             "es2015.promise"
         ],
-        "outDir": "./dist"
+        "outDir": "./output",
+        "skipLibCheck": true
     },
     "exclude": [
-        "./dist"
+        "./output"
     ]
 }

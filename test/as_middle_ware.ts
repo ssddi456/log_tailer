@@ -6,6 +6,6 @@ const testApp = express();
 testApp.use('/__log__', logApp());
 
 
-testApp.listen(3000, () => {
+testApp.listen(process.env.PORT || 3000, () => {
     console.log('test server start');
 });

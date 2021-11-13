@@ -1,4 +1,4 @@
-extends layout.jade
+extends layout.pug
 
 block content
   style.
@@ -118,21 +118,22 @@ block content
 
             .input-group
               .input-group-btn
-                span.btn.btn-xs.btn-default(data-bind="click: function(){ watching(!watching()) }")
+                span.btn.btn-xs.btn-default(data-bind="click: function(){ watching(!watching()) }", title="监控")
                   i.glyphicon(data-bind="css : {\
                                                     'glyphicon-play' : !watching(),\
                                                     'glyphicon-stop' : watching(),\
                                                 }")
+                +ko("!if:watching")
+                  span.btn.btn-xs.btn-default(data-bind="click: function(){ editing(!editing()) }", title="编辑")
+                    i.glyphicon.glyphicon-edit
 
-                span.btn.btn-xs.btn-default(data-bind="click: function(){ editing(!editing()) }")
-                  i.glyphicon.glyphicon-edit
 
-
-                span.btn.btn-xs.btn-default(data-bind="click: clean")
+                span.btn.btn-xs.btn-default(data-bind="click: clean", title="清空")
                   i.glyphicon.glyphicon-trash
 
-                span.btn.btn-xs.btn-default(data-bind="click: $parent.remove_view")
-                  i.glyphicon.glyphicon-remove
+                +ko("if:!watching")
+                  span.btn.btn-xs.btn-default(data-bind="click: $parent.remove_view", title="删除")
+                    i.glyphicon.glyphicon-remove
 
       +ko("if:watching")
         p
