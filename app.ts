@@ -1,8 +1,7 @@
 import * as express from 'express';
 import * as path from 'path';
-import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
-import * as bodyParser from 'body-parser';
+import { json, urlencoded } from 'body-parser';
 import { router } from './routes/index';
 
 const app = express();
@@ -11,9 +10,8 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -78,4 +76,4 @@ app.use(function (err, req, res, next) {
 
 });
 
-module.exports = app;
+export default app;

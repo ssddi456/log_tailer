@@ -13,13 +13,13 @@ require([
     log_views : ko.observableArray(),
     add_view : function() {
       var self = this;
-      $.post('/add_view', function( doc ) {
+      $.post('./add_view', function( doc ) {
         var view = log_view.create(doc.view);
         self.log_views.push( view );
       });
     },
     remove_view : function( _vm ) {
-      $.post('/remove_view', { _id : _vm._id }, function( res ) {
+      $.post('./remove_view', { _id : _vm._id }, function( res ) {
         if( !res.err ){
           vm.log_views.remove(_vm);
           vm.active_views.remove(_vm);

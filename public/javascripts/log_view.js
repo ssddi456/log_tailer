@@ -49,7 +49,7 @@ define([
             },
             load_log: function(done) {
                 var self = this;
-                $.post('/tail_log', {
+                $.post('./tail_log', {
                         pathname: this.pathname,
                         length: this.length
                     },
@@ -86,8 +86,15 @@ define([
             },
             start: function(done) {
                 this.length = 0;
-                $.post('/start_log_tail', {
-                    pathname: this.pathname
+                const pathname = this.pathname();
+                if (!pathname) {
+                    console.log('pathname', pathname, !!pathname);
+                    alert('请输入路径');
+                    this.watching(false);
+                    return;
+                }
+                $.post('./start_log_tail', {
+                    pathname
                 }, function(args) {
                     console.log(args);
                     done && done();
@@ -98,7 +105,7 @@ define([
                     clearTimeout(this.timer);
                 }
                 this.timer = undefined;
-                $.post('/stop_tail_log', {
+                $.post('./stop_tail_log', {
                     pathname: this.pathname
                 }, function() {
 
@@ -124,7 +131,7 @@ define([
         setTimeout(function() {
             // lazy set subscriber
             vm.name.subscribe(function(name) {
-                $.post('/update_view', {
+                $.post('./update_view', {
                     data: {
                         name: name
                     },
@@ -135,7 +142,7 @@ define([
             });
 
             vm.pathname.subscribe(function(pathname) {
-                $.post('/update_view', {
+                $.post('./update_view', {
                     data: {
                         pathname: pathname
                     },
@@ -149,7 +156,7 @@ define([
 
                 generate_highlight_reg(keywords);
 
-                $.post('/update_view', {
+                $.post('./update_view', {
                     data: {
                         keywords: keywords
                     },

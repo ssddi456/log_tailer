@@ -26,9 +26,12 @@ const logCache = {
 const maxAge = 10 * 60 * 1000;
 
 router.post('/start_log_tail', function (req, resp, next) {
-    const query = req.body;
+    const query = req.body as { pathname: string };
     const pathname = query.pathname;
-
+    if (!pathname) {
+        resp.json({ err: 1, msg: 'pathname is required' });
+        return;
+    }
     if (pathname in logCache) {
         debug('has old log tailer');
         resp.json({ err: 0 });
@@ -59,31 +62,33 @@ router.post('/start_log_tail', function (req, resp, next) {
 
 });
 
-router.post('*_log', function(req, resp, next ) {
-    const query = req.body;
+router.post('*_log', function (req, resp, next) {
+    const query = req.body as { pathname: string };
     const pathname = query.pathname;
-
+    if (!pathname) {
+        resp.json({ err: 1, msg: 'pathname is required' });
+        return;
+    }
     const tailer = logCache[pathname];
 
     debug(req.path, query);
 
-    if(!tailer) {
+    if (!tailer) {
         debug('log tailer for ' + pathname + ' not found');
         resp.json({ err: 1 });
         return;
     }
     debug('log tailer for ' + pathname + ' found');
-    next();    
+    next();
 });
 
 
 router.post('/append_log', function (req, resp, next) {
-    debug('start append_log to ' + pathname);
-    const query = req.body;
+    const query = req.body as { pathname: string };
     const pathname = query.pathname;
+    debug('start append_log to ' + pathname);
 
     const tailer = logCache[pathname];
-
     tailer.buffer.push(new Buffer(req.body.text + '\n'));
 
     resp.json({ err: 0 });
@@ -95,7 +100,6 @@ router.post('/tail_log', function (req, resp, next) {
     const pathname = query.pathname;
 
     const tailer = logCache[pathname];
-
 
     const cache = tailer.buffer;
 
@@ -114,14 +118,38 @@ router.post('/tail_log', function (req, resp, next) {
 router.post('/stop_tail_log', function (req, resp, next) {
     const query = req.body;
     const pathname = query.pathname;
+
     const tailer = logCache[pathname];
 
+    try {
+        tailer.cp.kill();
+    } catch (error) { }
 
-    tailer.cp.kill();
     logCache[pathname] = undefined;
     resp.json({ err: 0 });
 });
+router.post('/add_view', function (req, resp, next) {
+    storage.addView(function (err, doc) {
+        if (err) {
+            next(err);
+        } else {
+            resp.json({
+                view: doc,
+                err: 0,
+            });
+        }
+    });
+});
+router.post('*_vue', function (req, resp, next) {
+    const body = req.body as { _id: string };
+    const _id = body._id;
+    if (!_id) {
+        resp.json({ err: 1, msg: '_id is required' });
+        return;
+    }
 
+    next();
+});
 
 router.post('/remove_view', function (req, resp, next) {
 
@@ -137,18 +165,7 @@ router.post('/remove_view', function (req, resp, next) {
     });
 });
 
-router.post('/add_view', function (req, resp, next) {
-    storage.addView(function (err, doc) {
-        if (err) {
-            next(err);
-        } else {
-            resp.json({
-                view: doc,
-                err: 0,
-            });
-        }
-    });
-});
+
 
 router.post('/update_view', function (req, resp, next) {
     const body = req.body;
