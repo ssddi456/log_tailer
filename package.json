@@ -1,17 +1,15 @@
 {
     "dependencies": {
         "body-parser": "^1.19.0",
-        "cookie-parser": "~1.4.3",
         "debug": "^4.3.2",
         "express": "^4.17.1",
-        "fs-extra": "^10.0.0",
-        "nedb": "~1.8.0",
+        "@sailshq/nedb": "~1.8.0",
         "pug": "^3.0.2"
     },
-    "version": "0.0.1",
+    "version": "0.0.3-1",
     "name": "@ssddi456/log_tailer",
     "files": [
-        "output"
+        "output/**"
     ],
     "bin": {
         "log_tailer": "./output/bin/www"
@@ -26,7 +24,6 @@
     },
     "devDependencies": {
         "@types/body-parser": "^1.16.5",
-        "@types/cookie-parser": "^1.4.1",
         "@types/express": "^4.0.37",
         "@types/fs-extra": "^4.0.2",
         "@types/jquery": "^3.2.12",
@@ -34,6 +31,7 @@
         "@types/node": "^8.0.29",
         "@types/requirejs": "^2.1.31",
         "nodemon": "^2.0.15",
+        "fs-extra": "^10.0.0",
         "ts-node": "^7.0.1"
     },
     "nodemonConfig": {

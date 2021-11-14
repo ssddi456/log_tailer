@@ -1,6 +1,5 @@
 import * as express from 'express';
 import * as path from 'path';
-import * as cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'body-parser';
 import { router } from './routes/index';
 
@@ -12,7 +11,6 @@ app.set('view engine', 'pug');
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', router);

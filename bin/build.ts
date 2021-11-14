@@ -7,7 +7,6 @@ const outputDir = path.join(root, 'output');
 fs.ensureDirSync(outputDir);
 
 [
-    'package.json',
     'views',
     'public',
     'lib',

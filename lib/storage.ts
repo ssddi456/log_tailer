@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as nedb from 'nedb';
+import * as nedb from '@sailshq/nedb';
 import { Cursor } from 'nedb';
 
-const storage = new nedb({
+export const storage = new nedb({
     filename: path.join(__dirname, '../data/storage.db'),
     autoload: true,
-});
+}) as Nedb;
 
 storage.persistence.setAutocompactionInterval(3 * 60 * 1e3);
 
@@ -42,71 +42,82 @@ function create_updates(data) {
     }
     return updates;
 }
+export interface LogView {
+    name: string;
+    pathname: string;
+    keywords: string[];
+}
 
-export = {
-    addView(done) {
-        const note = {
-            timestamp: Date.now(),
-            type: 'view',
-            name: 'untitled',
-            pathname: '',
-            highlights: [],
-        };
-        storage.insert(note, done);
-    },
+export function addView(done, view?: LogView) {
+    const note = {
+        timestamp: Date.now(),
+        type: 'view',
+        name: 'untitled',
+        pathname: '',
+        highlights: [],
+        ...view,
+    };
+    storage.insert(note, done);
+}
 
-    removeView(id, done) {
-        storage.remove({ _id: id }, done);
-    },
-    get(id, done) {
-        storage.findOne({
-            _id: id,
-        }, done);
-    },
+export function removeView(id, done) {
+    storage.remove({ _id: id }, done);
+}
+export function get(id, done) {
+    storage.findOne({
+        _id: id,
+    }, done);
+}
 
-    getViews(done) {
-        const self = this;
-        storage.find({ type: 'view' })
-            .sort({ timestamp: -1 })
-            .exec(function (err, notes) {
-                if (err) { return done(err); }
-                if (!notes || !notes.length) {
-                    self.addView(function (addViewErr, note) {
-                        done(addViewErr, [note]);
+export function getViews(done, defaultViews?: LogView[]) {
+    storage.find({ type: 'view' })
+        .sort({ timestamp: -1 })
+        .exec(function (err, notes) {
+            if (err) { return done(err); }
+            if (!notes || !notes.length) {
+                if (defaultViews) {
+                    Promise.all(defaultViews.map(v => addView(null, v))).then((views) => {
+                        done(null, views);
                     });
                 } else {
-                    done(err, notes);
+
+                    addView(function (addViewErr, note) {
+                        done(addViewErr, [note]);
+                    });
                 }
-            });
-    },
 
-    getLayout(done) {
-        (storage.findOne as (query: any) => Cursor<any>)({ type: 'layout' })
-            .exec(function (err, layout) {
-                if (err) { return done(err); }
-                done(err, layout || {});
-            });
-    },
+            } else {
+                done(err, notes);
+            }
+        });
+}
 
-    updateLayout(data, done) {
-        const updates = create_updates(data);
+export function getLayout(done) {
+    (storage.findOne as (query: any) => Cursor<any>)({ type: 'layout' })
+        .exec(function (err, layout) {
+            if (err) { return done(err); }
+            done(err, layout || {});
+        });
+}
 
-        updates.timestamp = Date.now();
-        updates.type = 'layout';
+export function updateLayout(data, done) {
+    const updates = create_updates(data);
 
-        storage.update({ type: 'layout' }, { $set: updates }, { upsert: true }, done);
-    },
+    updates.timestamp = Date.now();
+    updates.type = 'layout';
 
-    update(id, data, done) {
-        const updates = create_updates(data);
+    storage.update({ type: 'layout' }, { $set: updates }, { upsert: true }, done);
+}
 
-        updates.timestamp = Date.now();
-        storage.update({ _id: id }, { $set: updates }, done);
-    },
+export function update(id, data, done) {
+    const updates = create_updates(data);
 
-    storage,
+    updates.timestamp = Date.now();
+    storage.update({ _id: id }, { $set: updates }, done);
+}
 
-    remove(id, done) {
-        storage.remove({ _id: id }, done);
-    },
-};
+
+
+export function remove(id, done) {
+    storage.remove({ _id: id }, done);
+}
