@@ -9,7 +9,10 @@
     "version": "0.0.4",
     "name": "@ssddi456/log_tailer",
     "files": [
-        "output/**"
+        "output/**/*.js",
+        "output/**/*.css",
+        "output/**/*.pug",
+        "output/**/*.file"
     ],
     "bin": {
         "log_tailer": "./output/bin/www"
